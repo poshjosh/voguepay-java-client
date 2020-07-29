@@ -1,3 +1,6 @@
-## bcimageutil
+## voguepay
 
-### Java library for manipulating images e.g extract image info, resize images, add text overlay etc
+### Java client for the voguepay api. [See the Voguepay developer documentation](https://voguepay.com/developers)
+
+
+

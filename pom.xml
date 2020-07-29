@@ -5,6 +5,8 @@
     <artifactId>voguepay-java-client</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <name>voguepay-java-client</name>
+    <description>Java client for the voguepay api</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -35,5 +37,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <name>voguepay-java-client</name>
 </project>
