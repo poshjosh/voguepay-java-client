@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.Base64;
 import java.util.Random;
@@ -16,10 +17,17 @@ import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 
 public class Voguepay {
-    private Boolean staging;
-    private String MerchantID;
-    private String Username;
-    private String Email;
+    
+    public static Voguepay demoInstance() {
+        return DemoInstanceCreator.create();
+    }
+    
+    public static enum Mode{DEMO, LIVE};
+    
+    private final Boolean staging;
+    private final String MerchantID;
+    private final String Username;
+    private final String Email;
     private String CommandAPI;
     private byte[] PublicKey;
     private Customer customer;
@@ -38,18 +46,11 @@ public class Voguepay {
     public Boolean tokenize = false;
     public String token = "";
 
-    public Voguepay(String MerchantID, String Username, String Email) {
+    public Voguepay(String MerchantID, String Username, String Email, Mode mode) {
         this.MerchantID = MerchantID;
         this.Username = Username;
         this.Email = Email;
-        this.staging = true;
-    }
-
-    public void setMode(String mode) {
-        if (mode.toLowerCase() != "demo" || mode.toLowerCase() != "live") {
-            new IllegalArgumentException("Parameter must be demo or live");
-        }
-        this.staging = mode.toLowerCase() == "demo";
+        this.staging = mode == Mode.DEMO;
     }
 
     public void setCommandAPIToken(String token) {
@@ -112,10 +113,14 @@ public class Voguepay {
         try {
             respData = connectionObj.executeGet(param);
         }
-        catch (Exception ex) {
+        catch (IOException ex) {
             Logger.getLogger(Voguepay.class.getName()).log(Level.SEVERE, null, ex);
         }
-        respData = respData == "-1" ? "{\"status\": false, \"message\":\"Unable to process command\"}" : (respData == "-3" ? "{\"status\": false, \"message\":\"Empty Merchant ID\"}" : (respData == "-4" ? "{\"status\": false, \"message\":\"Memo is empty\"}" : (respData == "-14" ? "{\"status\": false, \"message\":\"Invalid merchant ID\"}" : (respData.contains("voguepay.com") ? "{\"status\": true, \"message\":\"Redirection required\",\"URL\":\"" + respData + "\"}" : "{\"status\": false, \"message\":\"No result\"}"))));
+        respData = "-1".equals(respData) ? "{\"status\": false, \"message\":\"Unable to process command\"}" : 
+                ("-3".equals(respData) ? "{\"status\": false, \"message\":\"Empty Merchant ID\"}" : 
+                ("-4".equals(respData) ? "{\"status\": false, \"message\":\"Memo is empty\"}" : 
+                ("-14".equals(respData) ? "{\"status\": false, \"message\":\"Invalid merchant ID\"}" : 
+                (respData.contains("voguepay.com") ? "{\"status\": true, \"message\":\"Redirection required\",\"URL\":\"" + respData + "\"}" : "{\"status\": false, \"message\":\"No result\"}"))));
         return respData;
     }
 
@@ -133,7 +138,7 @@ public class Voguepay {
             jsonObj.put((Object)"ref", (Object)ref);
             jsonObj.put((Object)"hash", (Object)hash);
             jsonObj.put((Object)"version", (Object)"2");
-            if (this.staging.booleanValue()) {
+            if (this.staging) {
                 jsonObj.put((Object)"demo", (Object)true);
             }
             jsonObj.put((Object)"currency", (Object)this.currencyISO3);
@@ -144,7 +149,7 @@ public class Voguepay {
             jsonObj.put((Object)"response_url", (Object)this.urlencode(this.callbackUrl));
             jsonObj.put((Object)"referral_url", (Object)this.customerUrl);
             jsonObj.put((Object)"redirect_url", (Object)this.urlencode(this.redirectUrl));
-            if (this.tokenize.booleanValue()) {
+            if (this.tokenize) {
                 jsonObj.put((Object)"tokenize", (Object)true);
             }
             if (this.token.length() > 0) {
@@ -196,7 +201,7 @@ public class Voguepay {
             jsonObj.put((Object)"merchant", (Object)this.MerchantID);
             jsonObj.put((Object)"ref", (Object)ref);
             jsonObj.put((Object)"hash", (Object)hash);
-            if (this.staging.booleanValue()) {
+            if (this.staging) {
                 jsonObj.put((Object)"demo", (Object)true);
             }
             jsonObj.put((Object)"transaction_id", (Object)TransactionID);
@@ -204,7 +209,7 @@ public class Voguepay {
             String respData = connectionObj.executePost("json=" + this.urlencode(jsonObj.toJSONString()));
             return respData;
         }
-        catch (Exception ex) {
+        catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
             Logger.getLogger(Voguepay.class.getName()).log(Level.SEVERE, null, ex);
             return "";
         }

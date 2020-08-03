@@ -16,7 +16,10 @@ import okhttp3.Request;
 import org.json.simple.JSONObject;
 
 /**
- * @author hp
+ * @author chinomso bassey ikwuagwu
+ * @see https://voguepay.com/documentation
+ * @see https://voguepay.com/integration
+ * @see https://github.com/kunlexzybitty/Java-VoguePay-SDK
  */
 public class VoguepayTest {
     public static final String MERCHANT_ID = "v_merchant_id";
@@ -42,12 +45,19 @@ public class VoguepayTest {
     }
     
     public void send() {
+        Voguepay v = Voguepay.demoInstance();
+        System.out.println("Sending request to Voguepay: " + v);
+        final String jsonResponse = v.DirectPayment();
+        System.out.println("Received response from Voguepay: " + jsonResponse);
+    }
+    
+    public void send_old() {
 
         final Map<String, Object> body = new HashMap<>();
-        body.put(MERCHANT_ID, "demo");
+        body.put(MERCHANT_ID, "DEMO");
         body.put(TOTAL_AMOUNT, "550");
         body.put(CURRENCY, "NGN");
-        body.put(MERCHANT_REF, "xUmCde23B");
+        body.put(MERCHANT_REF, Long.toHexString(System.currentTimeMillis()));
         body.put(TRANSACTION_MEMO, "Payment for drawer");
         
         final String name = "Chinomso Ikwuagwu";
@@ -71,8 +81,10 @@ public class VoguepayTest {
   
         final String jsonStr = JSONObject.toJSONString(body);
         
-        final okhttp3.RequestBody jsonBody = okhttp3.RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
-            jsonStr);
+        System.out.println("Request.body " + jsonStr);
+        
+        final okhttp3.RequestBody jsonBody = okhttp3.RequestBody
+                .create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
         
         final String url = "https://voguepay.com/api";
         
@@ -91,8 +103,8 @@ public class VoguepayTest {
         final Map<String, List<Cookie>> all = new HashMap<>();
         
         final OkHttpClient client = clientBuilder
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(45, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(false)
                 .cookieJar(new CookieJar(){
                     @Override
@@ -122,7 +134,7 @@ public class VoguepayTest {
             final String message = response.message();
             System.out.println("Response.message: "+message);
             
-            final String result = response.body().string();
+            final String result = response.body() == null ? "null" : response.body().string();
             System.out.println("Response.body: "+result);
             
         }catch(Exception e) {
