@@ -4,6 +4,8 @@ target/
 nbproject/
 git-ignore/
 
+git-ignore.*
+
 nb-configuration.xml
 
 *.properties
