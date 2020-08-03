@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 
 public class Connection {
-    private String BaseURL = "https://voguepay.com/";
+    private final String BaseURL = "https://voguepay.com/";
     private final String USER_AGENT = "Mozilla/5.0";
 
     public String executeGet(String params) throws IOException {
@@ -31,18 +31,18 @@ public class Connection {
         if (responseCode != 200) {
             return new String();
         }
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        StringBuffer response = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+        try(BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            final StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            return response.toString().trim();
         }
-        in.close();
-        return response.toString().trim();
     }
 
     public String executePost(String jsonparam) {
         URL obj = null;
-        StringBuffer response = new StringBuffer();
+        final StringBuilder response = new StringBuilder();
         try {
             String inputLine;
             obj = new URL(this.BaseURL + "api/");
@@ -57,8 +57,7 @@ public class Connection {
             wr.writeBytes(jsonparam);
             wr.flush();
             wr.close();
-            int responseCode = 0;
-            responseCode = con.getResponseCode();
+            int responseCode = con.getResponseCode();
             if (responseCode != 200) {
                 return new String();
             }
@@ -69,7 +68,7 @@ public class Connection {
             }
             in.close();
         }
-        catch (Exception ex) {
+        catch (IOException ex) {
             Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
         }
         return response.toString().trim();
