@@ -1,6 +1,0 @@
-Properties: VoguepayProperties{commandApiToken has value=true, publicKeyPath=C:\Users\hp\Google Drive\will\voguepay\voguepay-publickey.txt}
-Sending request to Voguepay: Voguepay{staging=true, MerchantID=DEMO, Username=looseBoxes, Email=looseboxes@gmail.com, CommandAPI=5dYGVVQnGZXHEHrFBNVk5NHKPMZTm, PublicKey=true, amount=550.0, currencyISO3=NGN, memo=Payment for drawer, storeID=null, reference=173bac1b0fe, callbackUrl=null, customerUrl=null, customerIP=null, redirectUrl=null, successUrl=DESKTOP-5VDOUQD, failUrl=DESKTOP-5VDOUQD, tokenize=false, token=
-customer=Customer{Name=John Lock, Email=johnlock@gmail.com, Phone=08033000000, Address=1 tampa bay road, State=Abuja, CountryISO3=NGN, City=Mabushi, ZipCode=900108}
-creditcard=CreditCard{Name=John Lock, Pan=5061 0502 5442 1653 016, ExpiryMonth=01, ExpiryYear=22, CVV=212}}
-Received response from Voguepay: {"status": true, "message":"Redirection required","URL":"https://voguepay.com/pay/bnlink/1596566124-x111X1180"}
-
