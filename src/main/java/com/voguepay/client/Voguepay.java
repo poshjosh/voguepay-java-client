@@ -1,16 +1,13 @@
 package com.voguepay.client;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.util.Base64;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,28 +54,15 @@ public class Voguepay {
         this.CommandAPI = token;
     }
 
-    private void setPublicKey(String key) {
-        this.PublicKey = key.getBytes();
-    }
-
     public void setPublicKeyPath(String filepath) {
-        try {
-            byte[] encoded = Files.readAllBytes(new File(filepath).toPath());
-            String key = new String(encoded, StandardCharsets.US_ASCII);
-            key = key.replace("-", "");
-            key = key.replace("BEGIN", "");
-            key = key.replace("END", "");
-            key = key.replace("PUBLIC", "");
-            key = key.replace("KEY", "");
-            key = key.replace("\n", "");
-            key = key.trim();
-            this.PublicKey = Base64.getDecoder().decode(key);
+        try{
+            this.PublicKey = PublicKeyUtil.fromFile(filepath);
         }
         catch (IOException ex) {
             Logger.getLogger(Voguepay.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }

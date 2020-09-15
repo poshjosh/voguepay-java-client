@@ -46,9 +46,14 @@ public class VoguepayTest {
     
     public void send() {
         Voguepay v = Voguepay.demoInstance();
+        VoguepayProperties props = new VoguepayProperties("META-INF/git-ignore.properties");
+        System.out.println("Properties: " + props);
+        v.setCommandAPIToken(props.getCommandApiToken());
+        v.setPublicKeyPath(props.getPublicKeyPath());
         System.out.println("Sending request to Voguepay: " + v);
-        final String jsonResponse = v.DirectPayment();
-        System.out.println("Received response from Voguepay: " + jsonResponse);
+        final String response = v.GeneratePayLink();
+//        final String response = v.DirectPayment();
+        System.out.println("Received response from Voguepay: " + response);
     }
     
     public void send_old() {

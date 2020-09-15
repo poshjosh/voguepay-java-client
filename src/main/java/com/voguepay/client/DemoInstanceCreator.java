@@ -28,13 +28,13 @@ class DemoInstanceCreator {
         Voguepay v = new Voguepay("DEMO", "looseBoxes", "looseboxes@gmail.com", Voguepay.Mode.DEMO);
         v.amount = 550;
         final String host = host();
-        v.callbackUrl = host;
+//        v.callbackUrl = host;
         v.currencyISO3 = "NGN";
-        v.customerIP = ip();
-        v.customerUrl = host;
+//        v.customerIP = ip();
+//        v.customerUrl = host;
         v.failUrl = host;
         v.memo = "Payment for drawer";
-        v.redirectUrl = host;
+//        v.redirectUrl = host;
         v.reference = Long.toHexString(System.currentTimeMillis());
 //        v.storeID
         v.successUrl = host;
