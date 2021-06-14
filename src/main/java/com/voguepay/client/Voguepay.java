@@ -54,6 +54,10 @@ public class Voguepay {
         this.CommandAPI = token;
     }
 
+    public void setPublicKey(byte [] bytes) {
+        this.PublicKey = bytes;
+    }
+    
     public void setPublicKeyPath(String filepath) {
         try{
             this.PublicKey = PublicKeyUtil.fromFile(filepath);
